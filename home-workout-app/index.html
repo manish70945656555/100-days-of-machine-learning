@@ -370,12 +370,27 @@ details[open] summary::after{content:"–"}
       o.connect(g); g.connect(actx.destination); o.start(t0); o.stop(t0 + dur + .02);
     } catch(e){}
   }
+  // Bell: a few inharmonic partials with a long exponential decay, like a struck metal bell.
+  function bell(f, at, vol, decay){
+    if (!S.sound || !actx) return;
+    try {
+      var t0 = actx.currentTime + (at||0), out = actx.createGain();
+      out.gain.value = vol || .22; out.connect(actx.destination);
+      [[1,1,1],[2.0,.5,.7],[2.76,.35,.5],[5.4,.18,.3],[8.9,.08,.18]].forEach(function(pt){
+        var o = actx.createOscillator(), g = actx.createGain(), d = (decay||1.2) * pt[2];
+        o.type = 'sine'; o.frequency.value = f * pt[0];
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(pt[1], t0 + .004);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+        o.connect(g); g.connect(out); o.start(t0); o.stop(t0 + d + .05);
+      });
+    } catch(e){}
+  }
   var sfx = {
     tap:   function(){ tone(1400, .04, 0, 'triangle', .08); },
     day:   function(){ tone(520, .06, 0, 'triangle', .12, 780); },
-    set:   function(){ tone(660, .09, 0, 'sine', .16, 990); },
+    set:   function(){ bell(1318, 0, .22, 1.2); },
     unset: function(){ tone(500, .08, 0, 'sine', .12, 330); },
-    done:  function(){ tone(784, .12, 0, 'triangle', .16); tone(1175, .22, .09, 'triangle', .16); },
+    done:  function(){ bell(1318, 0, .2, 1.1); bell(1760, .14, .2, 1.5); },
     win:   function(){ [523,659,784,1047].forEach(function(f,k){ tone(f, k===3?.45:.14, k*.11, 'triangle', .18); }); },
     start: function(){ tone(440, .12, 0, 'square', .06, 660); },
     count: function(){ tone(880, .07, 0, 'square', .08); },
