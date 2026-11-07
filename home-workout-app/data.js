@@ -14,12 +14,12 @@ window.PLAN=[
     "cue": "Pull the dumbbell toward your hip, not your chest, to bias the lats."
    },
    {
-    "id": "Bent_Over_Two-Dumbbell_Row",
+    "id": "Dumbbell_Incline_Row",
     "sets": 4,
-    "reps": "10",
-    "rest": 90,
-    "bench": "None",
-    "cue": "Hinge to about 45°, brace the core and drive elbows back."
+    "reps": "10–12",
+    "rest": 75,
+    "bench": "30–45° incline",
+    "cue": "Chest-supported: lie face down on the incline. Drive the elbows back toward the hips for lats."
    },
    {
     "id": "Straight-Arm_Dumbbell_Pullover",
@@ -28,14 +28,6 @@ window.PLAN=[
     "rest": 60,
     "bench": "Flat (across)",
     "cue": "Lie across the bench. Feel the lats stretch at the bottom."
-   },
-   {
-    "id": "Dumbbell_Incline_Row",
-    "sets": 3,
-    "reps": "12",
-    "rest": 60,
-    "bench": "30–45° incline",
-    "cue": "Chest on the pad stops cheating. Squeeze 1 s at the top."
    },
    {
     "id": "Reverse_Flyes",
@@ -86,12 +78,12 @@ window.PLAN=[
     "cue": "Lead with the elbows, pinkies slightly up. Stop at shoulder height."
    },
    {
-    "id": "Lying_One-Arm_Lateral_Raise",
+    "id": "One-Arm_Side_Laterals",
     "sets": 3,
     "reps": "12/side",
     "rest": 45,
-    "bench": "30–45° incline (side-lying)",
-    "cue": "Side-lying puts tension on the side delt at the bottom of the rep."
+    "bench": "Hold the bench upright",
+    "cue": "Leaning away keeps tension on the side delt at the bottom, where normal raises go slack."
    },
    {
     "id": "Arnold_Dumbbell_Press",
@@ -193,49 +185,49 @@ window.PLAN=[
  },
  {
   "day": "Thu",
-  "title": "Legs & Core",
-  "focus": "Quads, hamstrings, abs",
-  "why": "Balanced legs keep the physique proportional. A tight core keeps the waist small.",
+  "title": "Cardio & Core",
+  "focus": "Fat burn, abs, light legs",
+  "why": "Cardio and abs keep the waist tight so the V shows. Leg loading is kept light so the legs maintain their shape without growing.",
   "ex": [
    {
-    "id": "Goblet_Squat",
+    "id": "Rope_Jumping",
     "sets": 4,
-    "reps": "12",
-    "rest": 90,
+    "reps": "60 s",
+    "rest": 30,
     "bench": "None",
-    "cue": "Hold one dumbbell at the chest; sit between the heels."
+    "cue": "No rope? Do the same bounce with an imaginary rope. Stay light on the balls of the feet."
    },
    {
-    "id": "Split_Squat_with_Dumbbells",
+    "id": "Star_Jump",
     "sets": 3,
-    "reps": "10/leg",
-    "rest": 75,
-    "bench": "Flat (rear foot up = Bulgarian)",
-    "cue": "Rear foot on the bench makes it a Bulgarian split squat."
+    "reps": "40 s",
+    "rest": 20,
+    "bench": "None",
+    "cue": "Jumping jacks or star jumps. Keep a steady, fast pace."
+   },
+   {
+    "id": "Mountain_Climbers",
+    "sets": 3,
+    "reps": "40 s",
+    "rest": 20,
+    "bench": "None",
+    "cue": "Hips level with the shoulders. Drive the knees fast toward the chest."
+   },
+   {
+    "id": "Fast_Skipping",
+    "sets": 3,
+    "reps": "40 s",
+    "rest": 20,
+    "bench": "None",
+    "cue": "High-knee skips in place. Pump the arms."
    },
    {
     "id": "Stiff-Legged_Dumbbell_Deadlift",
-    "sets": 4,
-    "reps": "10",
-    "rest": 90,
-    "bench": "None",
-    "cue": "Push the hips back with a flat back until you feel the hamstrings."
-   },
-   {
-    "id": "Dumbbell_Step_Ups",
-    "sets": 3,
-    "reps": "10/leg",
-    "rest": 60,
-    "bench": "Flat (must be stable)",
-    "cue": "Drive through the heel of the top foot. No push from the back leg."
-   },
-   {
-    "id": "Standing_Dumbbell_Calf_Raise",
-    "sets": 4,
+    "sets": 2,
     "reps": "15",
     "rest": 45,
     "bench": "None",
-    "cue": "Pause at the top and at the full stretch."
+    "cue": "Light weight only, for posture and hamstring health. Not for size."
    },
    {
     "id": "Decline_Crunch",
@@ -262,12 +254,12 @@ window.PLAN=[
   "why": "A thick upper back and full arms finish the look from every angle.",
   "ex": [
    {
-    "id": "Bent_Over_Two-Dumbbell_Row_With_Palms_In",
+    "id": "Dumbbell_Incline_Row",
     "sets": 4,
     "reps": "8–10",
     "rest": 90,
-    "bench": "None",
-    "cue": "Go heavy. Neutral grip, elbows tight to the body."
+    "bench": "30–45° incline",
+    "cue": "Go heavy. Chest stays on the pad, squeeze the shoulder blades at the top."
    },
    {
     "id": "Middle_Back_Shrug",
@@ -342,12 +334,12 @@ window.PLAN=[
     "cue": "Seated means no swinging. Last set: drop the weight and keep going."
    },
    {
-    "id": "One-Arm_Incline_Lateral_Raise",
+    "id": "One-Arm_Side_Laterals",
     "sets": 3,
-    "reps": "12/side",
+    "reps": "15/side",
     "rest": 45,
-    "bench": "30–45° incline (side-lying)",
-    "cue": "Constant tension through the whole range."
+    "bench": "Hold the bench upright",
+    "cue": "Lighter than Tuesday. Slow 3 s lowering and chase the burn."
    },
    {
     "id": "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench",
@@ -462,21 +454,22 @@ window.EX={
   ],
   "level": "beginner"
  },
- "Bent_Over_Two-Dumbbell_Row": {
-  "name": "Bent Over Two-Dumbbell Row",
+ "Dumbbell_Incline_Row": {
+  "name": "Chest-Supported Incline Dumbbell Row",
   "muscles": [
    "middle back"
   ],
   "secondary": [
    "biceps",
+   "forearms",
    "lats",
    "shoulders"
   ],
   "steps": [
-   "With a dumbbell in each hand (palms facing your torso), bend your knees slightly and bring your torso forward by bending at the waist; as you bend make sure to keep your back straight until it is almost parallel to the floor. Tip: Make sure that you keep the head up. The weights should hang directly in front of you as your arms hang perpendicular to the floor and your torso. This is your starting position.",
-   "While keeping the torso stationary, lift the dumbbells to your side (as you breathe out), keeping the elbows close to the body (do not exert any force with the forearm other than holding the weights). On the top contracted position, squeeze the back muscles and hold for a second.",
-   "Slowly lower the weight again to the starting position as you inhale.",
-   "Repeat for the recommended amount of repetitions."
+   "Using a neutral grip, lean into an incline bench.",
+   "Take a dumbbell in each hand with a neutral grip, beginning with the arms straight. This will be your starting position.",
+   "Retract the shoulder blades and flex the elbows to row the dumbbells to your side.",
+   "Pause at the top of the motion, and then return to the starting position."
   ],
   "level": "beginner"
  },
@@ -499,25 +492,6 @@ window.EX={
    "Hold the weight on the initial position for a second and repeat the motion for the prescribed number of repetitions."
   ],
   "level": "intermediate"
- },
- "Dumbbell_Incline_Row": {
-  "name": "Dumbbell Incline Row",
-  "muscles": [
-   "middle back"
-  ],
-  "secondary": [
-   "biceps",
-   "forearms",
-   "lats",
-   "shoulders"
-  ],
-  "steps": [
-   "Using a neutral grip, lean into an incline bench.",
-   "Take a dumbbell in each hand with a neutral grip, beginning with the arms straight. This will be your starting position.",
-   "Retract the shoulder blades and flex the elbows to row the dumbbells to your side.",
-   "Pause at the top of the motion, and then return to the starting position."
-  ],
-  "level": "beginner"
  },
  "Reverse_Flyes": {
   "name": "Reverse Flyes",
@@ -595,20 +569,20 @@ window.EX={
   ],
   "level": "beginner"
  },
- "Lying_One-Arm_Lateral_Raise": {
-  "name": "Lying One-Arm Lateral Raise",
+ "One-Arm_Side_Laterals": {
+  "name": "Lean-Away Lateral Raise",
   "muscles": [
    "shoulders"
   ],
   "secondary": [],
   "steps": [
-   "While holding a dumbbell in one hand, lay with your chest down on a flat bench. The other hand can be used to hold to the leg of the bench for stability.",
-   "Position the palm of the hand that is holding the dumbbell in a neutral manner (palms facing your torso) as you keep the arm extended with the elbow slightly bent. This will be your starting position.",
-   "Now raise the arm with the dumbbell to the side until your elbow is at shoulder height and your arm is roughly parallel to the floor as you exhale. Tip: Maintain your arm perpendicular to the torso while keeping your arm extended throughout the movement. Also, keep the contraction at the top for a second.",
-   "Slowly lower the dumbbell to the starting position as you inhale.",
-   "Repeat for the recommended amount of repetitions."
+   "Hold a dumbbell in one hand. With the other hand, grab something sturdy, such as the upright of your adjustable bench or a door frame.",
+   "Set your feet close to the support and lean your body away from it until your working arm hangs at an angle, about 15–30°.",
+   "Keep a slight bend in the elbow and raise the dumbbell out to the side until your arm is roughly parallel to the floor. Lead with the elbow.",
+   "Pause for a second at the top, then lower slowly (2–3 s) back to the start.",
+   "Finish all reps, then switch arms."
   ],
-  "level": "intermediate"
+  "level": "beginner"
  },
  "Arnold_Dumbbell_Press": {
   "name": "Arnold Dumbbell Press",
@@ -798,8 +772,23 @@ window.EX={
   ],
   "level": "beginner"
  },
- "Goblet_Squat": {
-  "name": "Goblet Squat",
+ "Rope_Jumping": {
+  "name": "Rope Jumping",
+  "muscles": [
+   "quadriceps"
+  ],
+  "secondary": [
+   "calves",
+   "hamstrings"
+  ],
+  "steps": [
+   "Hold an end of the rope in each hand. Position the rope behind you on the ground. Raise your arms up and turn the rope over your head bringing it down in front of you. When it reaches the ground, jump over it. Find a good turning pace that can be maintained. Different speeds and techniques can be used to introduce variation.",
+   "Rope jumping is exciting, challenges your coordination, and requires a lot of energy. A 150 lb person will burn about 350 calories jumping rope for 30 minutes, compared to over 450 calories running."
+  ],
+  "level": "intermediate"
+ },
+ "Star_Jump": {
+  "name": "Jumping Jacks / Star Jumps",
   "muscles": [
    "quadriceps"
   ],
@@ -810,26 +799,44 @@ window.EX={
    "shoulders"
   ],
   "steps": [
-   "Stand holding a light kettlebell by the horns close to your chest. This will be your starting position.",
-   "Squat down between your legs until your hamstrings are on your calves. Keep your chest and head up and your back straight.",
-   "At the bottom position, pause and use your elbows to push your knees out. Return to the starting position, and repeat for 10-20 repetitions."
+   "Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.",
+   "To initiate the move, squat down halfway and explode back up as high as possible. Fully extend your entire body, spreading your legs and arms away from the body.",
+   "As you land, bring your limbs back in and absorb your impact through the legs."
   ],
   "level": "beginner"
  },
- "Split_Squat_with_Dumbbells": {
-  "name": "Split Squat with Dumbbells",
+ "Mountain_Climbers": {
+  "name": "Mountain Climbers",
   "muscles": [
    "quadriceps"
   ],
   "secondary": [
+   "chest",
+   "hamstrings",
+   "shoulders"
+  ],
+  "steps": [
+   "Begin in a pushup position, with your weight supported by your hands and toes. Flexing the knee and hip, bring one leg until the knee is approximately under the hip. This will be your starting position.",
+   "Explosively reverse the positions of your legs, extending the bent leg until the leg is straight and supported by the toe, and bringing the other foot up with the hip and knee flexed. Repeat in an alternating fashion for 20-30 seconds."
+  ],
+  "level": "beginner"
+ },
+ "Fast_Skipping": {
+  "name": "High-Knee Skips",
+  "muscles": [
+   "quadriceps"
+  ],
+  "secondary": [
+   "abductors",
+   "adductors",
+   "calves",
    "glutes",
    "hamstrings"
   ],
   "steps": [
-   "Position yourself into a staggered stance with the rear foot elevated and front foot forward.",
-   "Hold a dumbbell in each hand, letting them hang at the sides. This will be your starting position.",
-   "Begin by descending, flexing your knee and hip to lower your body down. Maintain good posture througout the movement. Keep the front knee in line with the foot as you perform the exercise.",
-   "At the bottom of the movement, drive through the heel to extend the knee and hip to return to the starting position."
+   "Start in a relaxed position with one leg slightly forward. This will be your starting position.",
+   "Skip by executing a step-hop pattern of right-right-step to left-left-step, and so on, alternating back and forth.",
+   "Perform fast skips by maintaining close contact with the ground and reduce air time, moving as quickly as possible."
   ],
   "level": "beginner"
  },
@@ -850,38 +857,6 @@ window.EX={
    "Repeat for the recommended amount of repetitions."
   ],
   "level": "beginner"
- },
- "Dumbbell_Step_Ups": {
-  "name": "Dumbbell Step Ups",
-  "muscles": [
-   "quadriceps"
-  ],
-  "secondary": [
-   "calves",
-   "glutes",
-   "hamstrings"
-  ],
-  "steps": [
-   "Stand up straight while holding a dumbbell on each hand (palms facing the side of your legs).",
-   "Place the right foot on the elevated platform. Step on the platform by extending the hip and the knee of your right leg. Use the heel mainly to lift the rest of your body up and place the foot of the left leg on the platform as well. Breathe out as you execute the force required to come up.",
-   "Step down with the left leg by flexing the hip and knee of the right leg as you inhale. Return to the original standing position by placing the right foot of to next to the left foot on the initial position.",
-   "Repeat with the right leg for the recommended amount of repetitions and then perform with the left leg."
-  ],
-  "level": "intermediate"
- },
- "Standing_Dumbbell_Calf_Raise": {
-  "name": "Standing Dumbbell Calf Raise",
-  "muscles": [
-   "calves"
-  ],
-  "secondary": [],
-  "steps": [
-   "Stand with your torso upright holding two dumbbells in your hands by your sides. Place the ball of the foot on a sturdy and stable wooden board (that is around 2-3 inches tall) while your heels extend off and touch the floor. This will be your starting position.",
-   "With the toes pointing either straight (to hit all parts equally), inwards (for emphasis on the outer head) or outwards (for emphasis on the inner head), raise the heels off the floor as you exhale by contracting the calves. Hold the top contraction for a second.",
-   "As you inhale, go back to the starting position by slowly lowering the heels.",
-   "Repeat for the recommended amount of times."
-  ],
-  "level": "intermediate"
  },
  "Decline_Crunch": {
   "name": "Decline Crunch",
@@ -915,23 +890,6 @@ window.EX={
    "Repeat for the recommended amount of repetitions."
   ],
   "level": "intermediate"
- },
- "Bent_Over_Two-Dumbbell_Row_With_Palms_In": {
-  "name": "Bent Over Two-Dumbbell Row With Palms In",
-  "muscles": [
-   "middle back"
-  ],
-  "secondary": [
-   "biceps",
-   "lats"
-  ],
-  "steps": [
-   "With a dumbbell in each hand (palms facing each other), bend your knees slightly and bring your torso forward, by bending at the waist, while keeping the back straight until it is almost parallel to the floor. Tip: Make sure that you keep the head up. The weights should hang directly in front of you as your arms hang perpendicular to the floor and your torso. This is your starting position.",
-   "While keeping the torso stationary, lift the dumbbells to your side as you breathe out, squeezing your shoulder blades together. On the top contracted position, squeeze the back muscles and hold for a second.",
-   "Slowly lower the weight again to the starting position as you inhale.",
-   "Repeat for the recommended amount of repetitions."
-  ],
-  "level": "beginner"
  },
  "Middle_Back_Shrug": {
   "name": "Middle Back Shrug",
@@ -1059,22 +1017,6 @@ window.EX={
    "While maintaining the torso stationary (no swinging), lift the dumbbells to your side with a slight bend on the elbow and the hands slightly tilted forward as if pouring water in a glass. Continue to go up until you arms are parallel to the floor. Exhale as you execute this movement and pause for a second at the top.",
    "Lower the dumbbells back down slowly to the starting position as you inhale.",
    "Repeat for the recommended amount of repetitions."
-  ],
-  "level": "beginner"
- },
- "One-Arm_Incline_Lateral_Raise": {
-  "name": "One-Arm Incline Lateral Raise",
-  "muscles": [
-   "shoulders"
-  ],
-  "secondary": [],
-  "steps": [
-   "Lie down sideways on an incline bench press with a dumbbell in the hand. Make sure the shoulder is pressing against the incline bench and the arm is lying across your body with the palm around your navel.",
-   "Hold a dumbbell in your uppermost arm while keeping it extended in front of you parallel to the floor. This is your starting position.",
-   "While keeping the dumbbell parallel to the floor at all times, perform a lateral raise. Your arm should travel straight up until it is pointing at the ceiling. Tip: Exhale as you perform this movement. Hold the dumbbell in the position and feel the contraction in the shoulders for a second.",
-   "While inhaling lower the weight across your body back into the starting position.",
-   "Repeat the movement for the prescribed amount of repetitions.",
-   "Switch arms and repeat the movement."
   ],
   "level": "beginner"
  },

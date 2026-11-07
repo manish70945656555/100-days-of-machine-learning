@@ -7,8 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="V-Taper">
-<meta name="theme-color" content="#EEF1F4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0F1217" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0F1217">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -22,22 +21,14 @@
 <style>
 /* Layout: one narrow column like a phone app — week strip, day header, numbered exercise cards, floating rest timer. */
 :root{
-  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#14181F; --muted:#5C6573; --line:#D6DCE3;
-  --accent:#2246D6; --accent-ink:#FFFFFF; --accent-soft:#E3E8FB;
-  --done:#14935A; --done-soft:#DDF3E8; --photo:#FFFFFF;
+  /* Single dark theme on purpose: gym-floor graphite with a cobalt accent. */
+  --bg:#0F1217; --surface:#171B22; --ink:#E8ECF1; --muted:#8D97A6; --line:#262C36;
+  --accent:#7C95FF; --accent-ink:#0B0F1A; --accent-soft:#1E2640;
+  --done:#3DD68C; --done-soft:#14291F; --photo:#F4F5F7; --warn:#FB923C;
+  --timer-bg:#E8ECF1; --timer-ink:#0F1217;
   --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
-  color-scheme:light;
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F1217; --surface:#171B22; --ink:#E8ECF1; --muted:#8D97A6; --line:#262C36;
-  --accent:#7C95FF; --accent-ink:#0B0F1A; --accent-soft:#1E2640;
-  --done:#3DD68C; --done-soft:#14291F; --photo:#F4F5F7; color-scheme:dark;
-}}
-:root[data-theme="dark"]{
-  --bg:#0F1217; --surface:#171B22; --ink:#E8ECF1; --muted:#8D97A6; --line:#262C36;
-  --accent:#7C95FF; --accent-ink:#0B0F1A; --accent-soft:#1E2640;
-  --done:#3DD68C; --done-soft:#14291F; --photo:#F4F5F7; color-scheme:dark;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -53,6 +44,10 @@ header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:1
 .brand span{color:var(--accent)}
 .sub{color:var(--muted);font-size:13px;margin-top:4px}
 .stat{text-align:right;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.topr{display:flex;align-items:flex-end;gap:12px}
+.snd{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.snd svg{width:20px;height:20px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.snd .x{display:none}.snd[aria-pressed="false"] .w{display:none}.snd[aria-pressed="false"] .x{display:inline}
 .stat b{display:block;font-family:var(--display);font-size:26px;color:var(--ink);letter-spacing:0;line-height:1;font-variant-numeric:tabular-nums}
 
 .week{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding-block:6px 10px}
@@ -99,12 +94,12 @@ body.f1 .anim img + img{opacity:1}
 .tick svg{width:24px;height:24px;stroke:var(--line);stroke-width:3;fill:none;transition:stroke .2s}
 .tick:active{transform:scale(.92)}
 .card.is-done .tick{background:var(--done);border-color:var(--done)}
-.card.is-done .tick svg{stroke:#fff}
+.card.is-done .tick svg{stroke:var(--accent-ink)}
 
 .sets{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:0 12px 12px}
 .sets .lbl{font-size:12px;color:var(--muted);margin-right:2px}
 .set{min-width:38px;height:34px;padding:0 8px;border-radius:10px;border:1.5px solid var(--line);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted)}
-.set.on{background:var(--done);border-color:var(--done);color:#fff}
+.set.on{background:var(--done);border-color:var(--done);color:var(--accent-ink)}
 .kg{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .kg input{width:62px;height:34px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-weight:700;text-align:center;font-size:16px}
 details{border-top:1px solid var(--line)}
@@ -125,7 +120,7 @@ details[open] summary::after{content:"–"}
 
 .actions{display:flex;justify-content:flex-end;padding-block:16px 4px}
 .ghost{font-size:13px;font-weight:600;color:var(--muted);padding:8px 12px;border-radius:10px;border:1px solid var(--line)}
-.ghost.warn{color:#C2410C;border-color:#C2410C}
+.ghost.warn{color:var(--warn);border-color:var(--warn)}
 
 .notes{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;display:grid;gap:10px}
 .notes h4{margin:0;font-family:var(--display);font-size:20px;text-transform:uppercase;color:var(--ink)}
@@ -133,11 +128,11 @@ details[open] summary::after{content:"–"}
 .notes a{color:var(--accent)}
 
 .timer{position:fixed;left:0;right:0;bottom:0;z-index:20;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-top:12px;pointer-events:none}
-.timer .box{pointer-events:auto;max-width:528px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);position:relative;overflow:hidden}
+.timer .box{pointer-events:auto;max-width:528px;margin:0 auto;background:var(--timer-bg);color:var(--timer-ink);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);position:relative;overflow:hidden}
 .timer .t{font-family:var(--display);font-size:34px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;min-width:74px}
 .timer .l{flex:1;font-size:12px;line-height:1.3;min-width:0}
 .timer .l b{display:block;font-size:14px}
-.timer button{background:color-mix(in srgb,var(--bg) 16%,transparent);color:var(--bg);font-weight:700;font-size:13px;padding:9px 11px;border-radius:10px}
+.timer button{background:color-mix(in srgb,var(--timer-ink) 12%,transparent);color:var(--timer-ink);font-weight:700;font-size:13px;padding:9px 11px;border-radius:10px}
 .timer .fill{position:absolute;left:0;bottom:0;height:3px;background:var(--done);width:100%;transition:width 1s linear}
 
 @media (max-width:380px){.row{grid-template-columns:84px 1fr 44px;gap:10px}.tick{width:44px;height:44px}.dayhead h2{font-size:34px}}
@@ -153,7 +148,7 @@ details[open] summary::after{content:"–"}
       <h1 class="brand">V-Taper <span>Home</span></h1>
       <div class="sub">Dumbbells + adjustable bench · 6-day split</div>
     </div>
-    <div class="stat"><b id="weekCount">0/6</b>days this week</div>
+    <div class="topr"><div class="stat"><b id="weekCount">0/6</b>days this week</div><button type="button" class="snd" id="sndBtn" aria-pressed="true" aria-label="Sound effects"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M17 9l5 6M22 9l-5 6"/></svg></button></div>
   </header>
 
   <nav class="week" id="week" role="tablist" aria-label="Days of the week"></nav>
@@ -166,6 +161,7 @@ details[open] summary::after{content:"–"}
     <h4>How to build the V</h4>
     <ul>
       <li><b>Wide top:</b> lats (Mon, Fri) and side delts (Tue, Sat) get the most weekly sets.</li>
+      <li><b>Legs:</b> Thursday is cardio and core with only light leg work, to keep the legs the size they are.</li>
       <li><b>Narrow waist:</b> train abs, but skip heavy weighted side bends. Keep body fat in check with diet.</li>
       <li><b>Progressive overload:</b> log the dumbbell weight per exercise. When you hit the top of the rep range on every set, go up 1–2 kg.</li>
       <li><b>Tempo:</b> 2 s down, 1 s up. Leave 1–2 reps in reserve on most sets.</li>
@@ -264,7 +260,7 @@ details[open] summary::after{content:"–"}
         '<button type="button" class="tick" data-tick aria-pressed="' + done + '" aria-label="Mark ' + esc(x.name) + ' done"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
       '</div>' +
       '<div class="sets"><span class="lbl">Sets</span>' + dots +
-        '<label class="kg" for="' + kgId + '"><input id="' + kgId + '" data-kg inputmode="decimal" placeholder="–" value="' + esc(S.kg[e.id]||'') + '">kg</label></div>' +
+        (/ s$/.test(e.reps) ? '' : '<label class="kg" for="' + kgId + '"><input id="' + kgId + '" data-kg inputmode="decimal" placeholder="–" value="' + esc(S.kg[e.id]||'') + '">kg</label>') + '</div>' +
       '<details' + (openSet[cur+':'+i]?' open':'') + '><summary>How to do it</summary><div class="how">' +
         '<div class="big"><figure><img src="' + a + '" alt="' + esc(x.name) + ' start" loading="lazy"><figcaption>Start</figcaption></figure>' +
         '<figure><img src="' + b + '" alt="' + esc(x.name) + ' finish" loading="lazy"><figcaption>Finish</figcaption></figure></div>' +
@@ -293,18 +289,20 @@ details[open] summary::after{content:"–"}
 
   $('week').addEventListener('click', function(ev){
     var b = ev.target.closest('[data-day]'); if (!b) return;
-    cur = +b.dataset.day; renderAll(); window.scrollTo({top:0, behavior:'smooth'});
+    sfx.day(); cur = +b.dataset.day; renderAll(); window.scrollTo({top:0, behavior:'smooth'});
   });
 
   $('list').addEventListener('click', function(ev){
     var card = ev.target.closest('.card'); if (!card) return;
-    var i = +card.dataset.i, s = sets(cur, i);
+    var i = +card.dataset.i, s = sets(cur, i), wasDay = dayCount(cur) === PLAN[cur].ex.length;
     if (ev.target.closest('[data-tick]')){
       var v = !s.every(Boolean); for (var k=0;k<s.length;k++) s[k] = v;
       if (v) stopTimer();
+      v ? sfx.done() : sfx.unset();
     } else if (ev.target.closest('[data-set]')){
       var k2 = +ev.target.closest('[data-set]').dataset.set;
       s[k2] = !s[k2];
+      if (!s[k2]) sfx.unset(); else if (s.every(Boolean)) sfx.done(); else sfx.set();
       if (s[k2]){
         var e = PLAN[cur].ex[i];
         if (!s.every(Boolean)) startTimer(e.rest, EX[e.id].name + ' · set ' + (s.filter(Boolean).length + 1) + ' of ' + s.length);
@@ -313,6 +311,7 @@ details[open] summary::after{content:"–"}
       }
     } else return;
     checkLog(); save(); refreshCard(i); renderWeek(); renderHead();
+    if (!wasDay && dayCount(cur) === PLAN[cur].ex.length) setTimeout(sfx.win, 250);
     if (navigator.vibrate) try { navigator.vibrate(15); } catch(e){}
   });
   $('list').addEventListener('input', function(ev){
@@ -321,38 +320,73 @@ details[open] summary::after{content:"–"}
     S.kg[PLAN[cur].ex[i].id] = ev.target.value.trim(); save();
   });
   $('list').addEventListener('toggle', function(ev){
-    var c = ev.target.closest('.card'); if (c) openSet[cur+':'+c.dataset.i] = ev.target.open;
+    var c = ev.target.closest('.card'); if (c){ openSet[cur+':'+c.dataset.i] = ev.target.open; sfx.tap(); }
   }, true);
 
   var armed = false;
   function resetArm(on){ armed = on; var b = $('resetBtn'); b.textContent = on ? 'Tap again to reset' : 'Reset this day'; b.classList.toggle('warn', on); }
   $('resetBtn').addEventListener('click', function(){
+    sfx.tap();
     if (!armed){ resetArm(true); setTimeout(function(){ resetArm(false); }, 3000); return; }
     S.prog[cur] = {}; save(); renderAll();
   });
 
   // Rest timer
-  var tEnd = 0, tTotal = 0, tInt = null;
+  var tEnd = 0, tTotal = 0, tInt = null, lastCount = 0;
   function fmt(sec){ sec = Math.max(0, Math.ceil(sec)); return Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0'); }
   function tick(){
     var left = (tEnd - Date.now()) / 1000;
     $('tLeft').textContent = fmt(left);
     $('tFill').style.width = Math.max(0, left / tTotal * 100) + '%';
+    var whole = Math.ceil(left);
+    if (whole <= 3 && whole > 0 && whole !== lastCount){ lastCount = whole; sfx.count(); }
     if (left <= 0){ stopTimer(); beep(); }
   }
   function startTimer(sec, label){
-    tTotal = sec; tEnd = Date.now() + sec*1000; $('tNext').textContent = label; $('timer').hidden = false;
+    tTotal = sec; tEnd = Date.now() + sec*1000; lastCount = 0; sfx.start(); $('tNext').textContent = label; $('timer').hidden = false;
     clearInterval(tInt); tick(); tInt = setInterval(tick, 250);
   }
   function stopTimer(){ clearInterval(tInt); $('timer').hidden = true; }
-  $('tSkip').addEventListener('click', stopTimer);
-  $('tPlus').addEventListener('click', function(){ tEnd += 15000; tTotal += 15; tick(); });
+  $('tSkip').addEventListener('click', function(){ sfx.tap(); stopTimer(); });
+  $('tPlus').addEventListener('click', function(){ sfx.tap(); lastCount = 0; tEnd += 15000; tTotal += 15; tick(); });
+  // Sound effects (Web Audio, no files). iPhone: the ring/silent switch must be on ring to hear them.
   var actx = null;
-  document.addEventListener('pointerdown', function(){ try { if (!actx) actx = new (window.AudioContext||window.webkitAudioContext)(); if (actx.state==='suspended') actx.resume(); } catch(e){} }, {once:false, passive:true});
+  S.sound = S.sound !== false;
+  function unlock(){
+    try {
+      if (!actx){ actx = new (window.AudioContext||window.webkitAudioContext)(); var b = actx.createBuffer(1,1,22050), src = actx.createBufferSource(); src.buffer = b; src.connect(actx.destination); src.start(0); }
+      if (actx.state === 'suspended') actx.resume();
+    } catch(e){}
+  }
+  ['pointerdown','touchstart','keydown'].forEach(function(t){ document.addEventListener(t, unlock, {passive:true, capture:true}); });
+  function tone(f, dur, at, type, vol, f2){
+    if (!S.sound || !actx) return;
+    try {
+      var t0 = actx.currentTime + (at||0), o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t0);
+      if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur);
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol || .18, t0 + .01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(actx.destination); o.start(t0); o.stop(t0 + dur + .02);
+    } catch(e){}
+  }
+  var sfx = {
+    tap:   function(){ tone(1400, .04, 0, 'triangle', .08); },
+    day:   function(){ tone(520, .06, 0, 'triangle', .12, 780); },
+    set:   function(){ tone(660, .09, 0, 'sine', .16, 990); },
+    unset: function(){ tone(500, .08, 0, 'sine', .12, 330); },
+    done:  function(){ tone(784, .12, 0, 'triangle', .16); tone(1175, .22, .09, 'triangle', .16); },
+    win:   function(){ [523,659,784,1047].forEach(function(f,k){ tone(f, k===3?.45:.14, k*.11, 'triangle', .18); }); },
+    start: function(){ tone(440, .12, 0, 'square', .06, 660); },
+    count: function(){ tone(880, .07, 0, 'square', .08); },
+    end:   function(){ tone(988, .18, 0, 'square', .12); tone(988, .18, .24, 'square', .12); tone(1319, .4, .48, 'square', .12); }
+  };
+  function paintSnd(){ $('sndBtn').setAttribute('aria-pressed', S.sound); $('sndBtn').setAttribute('aria-label', S.sound ? 'Sound effects on' : 'Sound effects off'); }
+  $('sndBtn').addEventListener('click', function(){ unlock(); S.sound = !S.sound; save(); paintSnd(); if (S.sound) sfx.done(); });
+  paintSnd();
   function beep(){
     if (navigator.vibrate) try { navigator.vibrate([200,100,200]); } catch(e){}
-    try { if (!actx) return; [0, .25].forEach(function(t){ var o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = 880; o.connect(g); g.connect(actx.destination);
-      g.gain.setValueAtTime(.2, actx.currentTime+t); g.gain.exponentialRampToValueAtTime(.001, actx.currentTime+t+.2); o.start(actx.currentTime+t); o.stop(actx.currentTime+t+.22); }); } catch(e){}
+    sfx.end();
   }
 
   // GIF-style animation: alternate start/finish photo
