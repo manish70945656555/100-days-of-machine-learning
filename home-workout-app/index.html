@@ -89,6 +89,9 @@ body.f1 .anim img + img{opacity:1}
 .card.is-done h3{text-decoration:line-through;text-decoration-color:var(--done);text-decoration-thickness:2px;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chip.sup{background:var(--done-soft);color:var(--done);font-weight:700;white-space:normal}
+.anim.noimg{display:grid;place-items:center;background:var(--accent-soft)}
+.anim.noimg svg{width:44%;height:44%;fill:var(--accent)}
 .chip.strong{background:var(--accent-soft);color:var(--accent);font-weight:700}
 .tick{width:48px;height:48px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:background .2s,border-color .2s,transform .15s}
 .tick svg{width:24px;height:24px;stroke:var(--line);stroke-width:3;fill:none;transition:stroke .2s}
@@ -158,16 +161,22 @@ details[open] summary::after{content:"–"}
   <div class="actions"><button class="ghost" id="resetBtn" type="button">Reset this day</button></div>
 
   <footer class="notes">
-    <h4>How to build the V</h4>
+    <h4>The V-taper formula</h4>
     <ul>
-      <li><b>Wide top:</b> lats (Mon, Fri) and side delts (Tue, Sat) get the most weekly sets.</li>
-      <li><b>Legs:</b> Thursday is cardio and core with only light leg work, to keep the legs the size they are.</li>
-      <li><b>Narrow waist:</b> train abs, but skip heavy weighted side bends. Keep body fat in check with diet.</li>
-      <li><b>Progressive overload:</b> log the dumbbell weight per exercise. When you hit the top of the rep range on every set, go up 1–2 kg.</li>
-      <li><b>Tempo:</b> 2 s down, 1 s up. Leave 1–2 reps in reserve on most sets.</li>
-      <li>Ticks reset every Monday. Saved weights stay.</li>
+      <li><b>Goal:</b> broad shoulders, a wide back and a full upper chest with a tighter-looking waist, using only an adjustable bench and dumbbells.</li>
+      <li><b>Run it for 8–12 weeks</b>, adding reps and weight over time.</li>
+      <li><b>Weekly frequency:</b> chest 2×, back 2×, arms 2×, legs 1×, side delts 3×, core 2×.</li>
+      <li><b>Progressive overload:</b> when you hit the top of the rep range with clean form, go up slightly. Example: 10 kg × 10 → 10 kg × 12 → 12.5 kg × 8. Log your weights in the kg boxes.</li>
     </ul>
-    <div>Exercise photos: <a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noopener">free-exercise-db</a> (public domain). Each animation alternates the start and end position.</div>
+    <h4>Priority lifts</h4>
+    <ul>
+      <li><b>Lateral raises:</b> shoulder width</li>
+      <li><b>Incline dumbbell press:</b> upper chest</li>
+      <li><b>Single-arm dumbbell rows:</b> back width and thickness</li>
+      <li><b>Rear delt fly:</b> 3D shoulders</li>
+      <li><b>Dumbbell pullovers:</b> lat emphasis</li>
+    </ul>
+    <div>Ticks reset every Monday; saved weights stay. Exercise photos: <a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noopener">free-exercise-db</a> (public domain).</div>
   </footer>
 </div>
 
@@ -238,7 +247,7 @@ details[open] summary::after{content:"–"}
     var d = PLAN[cur], n = dayCount(cur), t = d.ex.length;
     var mins = 0; d.ex.forEach(function(e){ mins += e.sets * (45 + e.rest); });
     $('dayhead').innerHTML =
-      '<div class="eyebrow">' + (cur===todayIdx ? 'Today · ' : '') + d.day + ' · ' + esc(d.focus) + ' · ~' + Math.round(mins/60) + ' min</div>' +
+      '<div class="eyebrow">' + (cur===todayIdx ? 'Today · ' : '') + d.day + ' · ' + esc(d.focus) + (cur < 6 ? ' · ~' + Math.round(mins/60) + ' min' : '') + '</div>' +
       '<h2>' + esc(d.title) + '</h2><p>' + esc(d.why) + '</p>' +
       '<div class="prog"><div class="track"><i style="width:' + Math.round(n/t*100) + '%"></i></div><div class="count">' + n + ' / ' + t + ' done</div></div>' +
       (n===t ? '<div class="done-banner"><span>Workout complete. Nice work.</span><span>✓</span></div>' : '');
@@ -253,19 +262,21 @@ details[open] summary::after{content:"–"}
     var kgId = 'kg-' + e.id.replace(/[^A-Za-z0-9]/g,'');
     return '<article class="card' + (done?' is-done':'') + '" data-i="' + i + '">' +
       '<div class="row">' +
-        '<div class="anim"><img src="' + a + '" alt="' + esc(x.name) + ' start position" loading="lazy"><img src="' + b + '" alt="" loading="lazy"><span class="gif">GIF</span></div>' +
-        '<div class="info"><div class="num">Exercise ' + (i+1) + ' of ' + PLAN[cur].ex.length + '</div><h3>' + esc(x.name) + '</h3>' +
-          '<div class="chips"><span class="chip strong">' + e.sets + ' × ' + esc(e.reps) + '</span><span class="chip">Rest ' + e.rest + ' s</span>' +
+        (e.img ? '<div class="anim"><img src="' + a + '" alt="' + esc(e.name) + ' start position" loading="lazy"><img src="' + b + '" alt="" loading="lazy"><span class="gif">GIF</span></div>'
+               : '<div class="anim noimg" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></div>') +
+        '<div class="info"><div class="num">Exercise ' + (i+1) + ' of ' + PLAN[cur].ex.length + '</div><h3>' + esc(e.name) + '</h3>' +
+          '<div class="chips"><span class="chip strong">' + e.sets + ' × ' + esc(e.reps) + '</span>' +
+          (e.sup ? '<span class="chip sup">' + esc(e.sup) + (e.rest ? ' · then rest ' + e.rest + ' s' : ' · no rest, go to next') + '</span>' : (e.rest ? '<span class="chip">Rest ' + e.rest + ' s</span>' : '')) +
           (e.bench !== 'None' ? '<span class="chip">Bench: ' + esc(e.bench) + '</span>' : '') + '</div></div>' +
-        '<button type="button" class="tick" data-tick aria-pressed="' + done + '" aria-label="Mark ' + esc(x.name) + ' done"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+        '<button type="button" class="tick" data-tick aria-pressed="' + done + '" aria-label="Mark ' + esc(e.name) + ' done"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
       '</div>' +
       '<div class="sets"><span class="lbl">Sets</span>' + dots +
-        (/ s$/.test(e.reps) ? '' : '<label class="kg" for="' + kgId + '"><input id="' + kgId + '" data-kg inputmode="decimal" placeholder="–" value="' + esc(S.kg[e.id]||'') + '">kg</label>') + '</div>' +
+        (/ (s|min|h)$/.test(e.reps) ? '' : '<label class="kg" for="' + kgId + '"><input id="' + kgId + '" data-kg inputmode="decimal" placeholder="–" value="' + esc(S.kg[e.id]||'') + '">kg</label>') + '</div>' +
       '<details' + (openSet[cur+':'+i]?' open':'') + '><summary>How to do it</summary><div class="how">' +
-        '<div class="big"><figure><img src="' + a + '" alt="' + esc(x.name) + ' start" loading="lazy"><figcaption>Start</figcaption></figure>' +
-        '<figure><img src="' + b + '" alt="' + esc(x.name) + ' finish" loading="lazy"><figcaption>Finish</figcaption></figure></div>' +
-        '<div class="cue"><b>V-taper cue:</b> ' + esc(e.cue) + '</div>' +
-        '<div class="muscles">Targets <b>' + esc(x.muscles.join(', ')) + '</b>' + (x.secondary.length ? ' · also ' + esc(x.secondary.join(', ')) : '') + '</div>' +
+        (!e.img ? '' : '<div class="big"><figure><img src="' + a + '" alt="' + esc(e.name) + ' start" loading="lazy"><figcaption>Start</figcaption></figure>' +
+        '<figure><img src="' + b + '" alt="' + esc(e.name) + ' finish" loading="lazy"><figcaption>Finish</figcaption></figure></div>') +
+        '<div class="cue"><b>Cue:</b> ' + esc(e.cue) + '</div>' +
+        (!e.img ? '' : '<div class="muscles">Targets <b>' + esc(x.muscles.join(', ')) + '</b>' + (x.secondary.length ? ' · also ' + esc(x.secondary.join(', ')) : '') + '</div>') +
         '<ol>' + x.steps.map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('') + '</ol>' +
       '</div></details></article>';
   }
@@ -305,8 +316,9 @@ details[open] summary::after{content:"–"}
       if (!s[k2]) sfx.unset(); else if (s.every(Boolean)) sfx.done(); else sfx.set();
       if (s[k2]){
         var e = PLAN[cur].ex[i];
-        if (!s.every(Boolean)) startTimer(e.rest, EX[e.id].name + ' · set ' + (s.filter(Boolean).length + 1) + ' of ' + s.length);
-        else if (PLAN[cur].ex[i+1]) startTimer(e.rest, 'Next: ' + EX[PLAN[cur].ex[i+1].id].name);
+        if (!e.rest) stopTimer();
+        else if (!s.every(Boolean)) startTimer(e.rest, e.name + ' · set ' + (s.filter(Boolean).length + 1) + ' of ' + s.length);
+        else if (PLAN[cur].ex[i+1]) startTimer(e.rest, 'Next: ' + PLAN[cur].ex[i+1].name);
         else stopTimer();
       }
     } else return;
