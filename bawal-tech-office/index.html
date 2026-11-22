@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bawal Tech Office</title>
+<meta name="description" content="Daily office task manager for Bawal Tech Media — tasks, content planner, focus timer and notes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --yellow:#FFD60A; --yellow-deep:#F5C400; --yellow-soft:#FFF5C4; --yellow-wash:#FFFBE6;
+  --ink:#111111; --ink-2:#2A2A2A; --muted:#6B6657; --line:#EFE6C4;
+  --bg:#FFFDF3; --card:#FFFFFF; --shadow:0 6px 24px rgba(60,48,0,.08);
+  --red:#E5484D; --green:#2F9E44; --blue:#3B6FD8;
+  --radius:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --yellow-soft:#3A3310; --yellow-wash:#1E1B0D; --ink:#F7F3E3; --ink-2:#E6E0C8; --muted:#A8A28C;
+    --line:#38331F; --bg:#121109; --card:#1B1A12; --shadow:0 6px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --yellow-soft:#3A3310; --yellow-wash:#1E1B0D; --ink:#F7F3E3; --ink-2:#E6E0C8; --muted:#A8A28C;
+  --line:#38331F; --bg:#121109; --card:#1B1A12; --shadow:0 6px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:Poppins,system-ui,sans-serif; color:var(--ink); background:var(--bg);
+  background-image:
+    radial-gradient(1200px 500px at 110% -10%, rgba(255,214,10,.35), transparent 60%),
+    radial-gradient(700px 400px at -10% 110%, rgba(255,214,10,.22), transparent 60%);
+  background-attachment:fixed; min-height:100vh; font-size:14px; line-height:1.5;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ---------- layout ---------- */
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.side{
+  position:sticky;top:0;height:100vh;padding:24px 18px;display:flex;flex-direction:column;gap:22px;
+  background:var(--card);border-right:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:46px;height:46px;flex:none}
+.brand-name{font-weight:800;font-size:20px;line-height:1;letter-spacing:-.5px}
+.brand-sub{margin-top:4px;font-weight:700;font-size:13px;display:flex;gap:4px;align-items:center}
+.hl{background:var(--yellow);color:#111;padding:1px 7px;border-radius:7px}
+.tagline{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;border-top:2px solid var(--yellow);padding-top:8px;display:flex;gap:6px;align-items:center}
+.tagline i{width:5px;height:5px;border-radius:50%;background:var(--yellow);display:inline-block}
+.nav{display:flex;flex-direction:column;gap:6px}
+.nav button{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;border:0;background:transparent;
+  font-weight:600;text-align:left;color:var(--ink-2);transition:background .15s;
+}
+.nav button:hover{background:var(--yellow-wash)}
+.nav button.active{background:var(--yellow);color:#111;box-shadow:0 4px 14px rgba(255,214,10,.45)}
+.nav .count{margin-left:auto;font-size:11px;background:var(--ink);color:var(--bg);border-radius:20px;padding:1px 8px}
+.nav button.active .count{background:#111;color:var(--yellow)}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.insta{display:flex;align-items:center;gap:8px;background:#111;color:#fff;border-radius:40px;padding:8px 14px;font-weight:600;font-size:13px;text-decoration:none;justify-content:center}
+.insta span{width:22px;height:22px;border-radius:7px;background:linear-gradient(45deg,#F9CE34,#EE2A7B,#6228D7);display:grid;place-items:center}
+.insta span svg{width:14px;height:14px;stroke:#fff}
+
+main{padding:26px 32px 60px;min-width:0}
+.top{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.top h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.5px;position:relative}
+.top h1::after{content:"";position:absolute;left:0;bottom:-6px;width:70px;height:4px;border-radius:4px;background:var(--yellow)}
+.top .sub{color:var(--muted);font-size:13px;margin-top:8px}
+.top-actions{margin-left:auto;display:flex;gap:10px;align-items:center}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center}
+.icon-btn:hover{border-color:var(--yellow-deep)}
+.menu-btn{display:none}
+
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:40px;padding:10px 18px;font-weight:700;background:var(--yellow);color:#111;box-shadow:0 4px 14px rgba(255,214,10,.4);font-style:italic;white-space:nowrap}
+.btn:hover{background:var(--yellow-deep)}
+.btn.dark{background:#111;color:var(--yellow);box-shadow:none}
+.btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;font-style:normal;color:var(--ink)}
+.btn.sm{padding:6px 12px;font-size:12px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.card h3{margin:0 0 14px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card h3 .more{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);background:none;border:0}
+.card h3 .more:hover{color:var(--ink)}
+.view{display:none}
+.view.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- dashboard ---------- */
+.hero{
+  position:relative;overflow:hidden;border-radius:24px;padding:28px;margin-bottom:20px;
+  background:linear-gradient(115deg,#FFE45C 0%,#FFD60A 55%,#FFC800 100%);color:#111;
+  display:flex;gap:20px;align-items:center;flex-wrap:wrap;
+}
+.hero::before{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.28)}
+.hero::after{content:"";position:absolute;left:14px;top:14px;width:60px;height:40px;background-image:radial-gradient(#111 1.6px,transparent 1.8px);background-size:12px 12px;opacity:.25}
+.hero-text{position:relative;flex:1;min-width:240px}
+.hero h2{margin:0;font-size:28px;font-weight:800;letter-spacing:-.5px;line-height:1.15}
+.hero h2 em{background:#111;color:var(--yellow);padding:0 10px;border-radius:10px;font-style:italic}
+.hero p{margin:8px 0 0;font-weight:500}
+.daylog{position:relative;background:rgba(255,255,255,.75);backdrop-filter:blur(4px);border-radius:18px;padding:14px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.daylog .t{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:600;opacity:.7}
+.daylog .v{font-size:18px;font-weight:800}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.stat{display:flex;gap:14px;align-items:center;padding:18px}
+.stat .ic{width:46px;height:46px;border-radius:14px;background:var(--yellow-soft);display:grid;place-items:center;color:var(--ink)}
+.stat .ic svg{width:22px;height:22px}
+.stat .n{font-size:24px;font-weight:800;line-height:1}
+.stat .l{font-size:12px;color:var(--muted);font-weight:500;margin-top:4px}
+
+.dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+.dash-col{display:flex;flex-direction:column;gap:20px;min-width:0}
+
+.task-row{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px dashed var(--line)}
+.task-row:last-child{border-bottom:0}
+.check{width:22px;height:22px;border-radius:7px;border:2px solid var(--ink);background:transparent;display:grid;place-items:center;flex:none;padding:0}
+.check.on{background:var(--yellow);border-color:var(--yellow-deep)}
+.check.on svg{stroke:#111}
+.check svg{width:14px;height:14px;stroke:transparent;stroke-width:3}
+.task-row .tt{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task-row.done .tt{text-decoration:line-through;color:var(--muted)}
+.empty{color:var(--muted);text-align:center;padding:22px 10px;font-size:13px}
+
+.chip{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;background:var(--yellow-soft);color:var(--ink);white-space:nowrap}
+.chip.high{background:#111;color:var(--yellow)}
+.chip.medium{background:var(--yellow);color:#111}
+.chip.low{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.chip.late{background:rgba(229,72,77,.12);color:var(--red)}
+
+.progress-wrap{display:flex;gap:20px;align-items:center}
+.ring{width:120px;height:120px;flex:none;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-size:24px;font-weight:800}
+.ring .pct small{display:block;font-size:10px;font-weight:600;color:var(--muted);text-align:center;margin-top:-6px}
+.bar-list{flex:1;display:flex;flex-direction:column;gap:10px}
+.bar-list .lbl{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:4px}
+.bar{height:8px;border-radius:8px;background:var(--yellow-soft);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--ink);border-radius:8px}
+
+.timer{text-align:center}
+.timer .modes{display:inline-flex;background:var(--yellow-wash);border:1px solid var(--line);border-radius:40px;padding:4px;margin-bottom:14px}
+.timer .modes button{border:0;background:transparent;border-radius:40px;padding:6px 14px;font-weight:600;font-size:12px}
+.timer .modes button.active{background:#111;color:var(--yellow)}
+.timer .clock{font-size:52px;font-weight:800;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums}
+.timer .ctrl{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.timer .meta{font-size:12px;color:var(--muted);margin-top:12px}
+
+.tools{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.tool{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px;border-radius:14px;border:1px solid var(--line);text-decoration:none;font-size:12px;font-weight:600;transition:transform .15s,border-color .15s}
+.tool:hover{transform:translateY(-3px);border-color:var(--yellow-deep)}
+.tool .logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:16px}
+
+.post-row{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+.post-row:last-child{border-bottom:0}
+.date-badge{width:46px;flex:none;text-align:center;border-radius:12px;background:var(--yellow);color:#111;padding:4px 0;line-height:1.1}
+.date-badge b{display:block;font-size:17px}
+.date-badge span{font-size:10px;font-weight:600;text-transform:uppercase}
+
+/* ---------- tasks board ---------- */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:40px;padding:8px 14px;flex:1;min-width:200px;max-width:340px}
+.search input{border:0;outline:0;background:transparent;width:100%}
+select.pill{background:var(--card);border:1px solid var(--line);border-radius:40px;padding:9px 14px;font-weight:500}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+.col{background:var(--yellow-wash);border:1px solid var(--line);border-radius:var(--radius);padding:14px;min-height:300px;transition:background .15s}
+.col.over{background:var(--yellow-soft);border-color:var(--yellow-deep)}
+.col-head{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:12px;padding:0 4px}
+.col-head .dot{width:10px;height:10px;border-radius:50%}
+.col-head .n{margin-left:auto;background:var(--card);border:1px solid var(--line);font-size:12px;padding:0 9px;border-radius:20px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;cursor:grab;box-shadow:0 2px 8px rgba(60,48,0,.05)}
+.tcard:active{cursor:grabbing}
+.tcard.dragging{opacity:.4}
+.tcard .tt{font-weight:700;margin-bottom:6px}
+.tcard .nt{font-size:12px;color:var(--muted);margin-bottom:10px;white-space:pre-wrap}
+.tcard .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tcard .acts{display:flex;gap:4px;margin-left:auto}
+.mini{width:28px;height:28px;border-radius:8px;border:0;background:transparent;display:grid;place-items:center;color:var(--muted)}
+.mini:hover{background:var(--yellow-soft);color:var(--ink)}
+.mini svg{width:15px;height:15px}
+
+/* ---------- planner ---------- */
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px}
+.day{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;min-height:220px;display:flex;flex-direction:column;gap:8px}
+.day.today{border:2px solid var(--yellow-deep);background:var(--yellow-wash)}
+.day-head{display:flex;align-items:baseline;gap:6px}
+.day-head b{font-size:22px;font-weight:800}
+.day-head span{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase}
+.day-head .mini{margin-left:auto}
+.post{border-radius:10px;padding:8px 10px;font-size:12px;background:var(--yellow-soft);border-left:4px solid var(--ink);cursor:pointer}
+.post b{display:block;font-weight:700;font-size:12.5px;line-height:1.3}
+.post .pl{display:block;font-size:10px;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.post .st{display:inline-block;margin-top:5px;font-size:10px;font-weight:600;background:var(--card);border-radius:20px;padding:0 7px}
+.post.published{opacity:.55}
+.post.published b{text-decoration:line-through}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:14px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* ---------- notes ---------- */
+.note-new{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.note-new textarea{flex:1;min-width:220px;min-height:70px;border-radius:16px;border:1px solid var(--line);background:var(--card);padding:12px 14px;resize:vertical;outline:0}
+.note-new textarea:focus{border-color:var(--yellow-deep)}
+.notes{columns:3 240px;column-gap:16px}
+.note{break-inside:avoid;margin-bottom:16px;border-radius:16px;padding:16px;position:relative;box-shadow:var(--shadow);color:#111}
+.note p{margin:0 0 10px;white-space:pre-wrap;word-wrap:break-word;font-weight:500}
+.note .foot{display:flex;align-items:center;font-size:11px;opacity:.7;font-weight:600}
+.note .foot .mini{margin-left:auto;color:#111}
+.note .foot .mini:hover{background:rgba(0,0,0,.08)}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(17,17,17,.45);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.overlay.open{display:flex}
+.modal{background:var(--card);border-radius:22px;padding:24px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:calc(100vh - 32px);overflow:auto}
+.modal h3{margin:0 0 18px;font-size:20px;font-weight:800}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:12px;font-weight:600;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg);outline:0}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--yellow-deep)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-acts{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.modal-acts .del{margin-right:auto;color:var(--red);border-color:transparent}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);opacity:0;visibility:hidden;background:#111;color:var(--yellow);padding:10px 20px;border-radius:40px;font-weight:600;transition:transform .25s;z-index:60;font-size:13px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
+
+footer.foot{margin-top:36px;padding-top:16px;border-top:2px solid var(--yellow);display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .week{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:980px){
+  .dash-grid{grid-template-columns:1fr}
+  .board{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:40;transform:translateX(-100%);transition:transform .25s;box-shadow:var(--shadow)}
+  .side.open{transform:none}
+  .menu-btn{display:grid}
+  main{padding:18px 16px 50px}
+  .week{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tools{grid-template-columns:repeat(3,1fr)}
+  .hero{padding:22px}
+  .hero h2{font-size:22px}
+}
+@media (max-width:480px){
+  .stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stat{padding:14px;gap:10px}
+  .stat .ic{width:38px;height:38px}
+  .week{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
+  .progress-wrap{flex-direction:column;align-items:stretch}
+  .ring{margin:0 auto}
+  .top h1{font-size:22px}
+  .btn.add-label span{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="side" id="side">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="2" y="2" width="60" height="60" rx="16" fill="#111"/>
+        <path d="M22 12h22c7 0 11 4 11 9.5 0 4-2.5 7-6 8 4.5 1 7.5 4.5 7.5 9.5 0 7-5.5 12-13 12H14l3-9h8.5z" fill="#FFD60A"/>
+        <path d="M30 20h10c2.4 0 3.8 1.3 3.8 3.3 0 2.2-1.7 3.7-4.3 3.7H28z M27 35h12c2.6 0 4.2 1.4 4.2 3.6 0 2.5-1.9 4.2-4.8 4.2H25z" fill="#111"/>
+        <path d="M8 50c10-2 22-9 32-22" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div>
+        <div class="brand-name">Bawal</div>
+        <div class="brand-sub"><span class="hl">Tech</span> Media</div>
+      </div>
+    </div>
+    <div class="tagline">Explore <i></i> Learn <i></i> Grow</div>
+
+    <nav class="nav" id="nav">
+      <button data-view="dashboard" class="active"><svg class="i"><use href="#i-home"/></svg>Dashboard</button>
+      <button data-view="tasks"><svg class="i"><use href="#i-board"/></svg>Tasks <span class="count" id="navTaskCount">0</span></button>
+      <button data-view="planner"><svg class="i"><use href="#i-cal"/></svg>Content Planner</button>
+      <button data-view="notes"><svg class="i"><use href="#i-note"/></svg>Notes</button>
+    </nav>
+
+    <div class="side-foot">
+      <button class="btn" id="sideAdd"><svg class="i"><use href="#i-plus"/></svg>New Task</button>
+      <a class="insta" href="https://instagram.com/bawal_techh" target="_blank" rel="noopener">
+        <span><svg class="i"><use href="#i-insta"/></svg></span>@bawal_techh
+      </a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+    <div class="top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"><svg class="i"><use href="#i-menu"/></svg></button>
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="sub" id="pageSub"></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme"><svg class="i"><use href="#i-moon"/></svg></button>
+        <button class="btn add-label" id="topAdd"><svg class="i"><use href="#i-plus"/></svg><span>Add Task</span></button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="view-dashboard">
+      <div class="hero">
+        <div class="hero-text">
+          <h2 id="greet">Good Morning, <em>Team!</em></h2>
+          <p id="heroLine">Let's make today productive.</p>
+        </div>
+        <div class="daylog">
+          <div><div class="t">Day Started</div><div class="v" id="logStart">--:--</div></div>
+          <div><div class="t">Day Ended</div><div class="v" id="logEnd">--:--</div></div>
+          <div><div class="t">Worked</div><div class="v" id="logHours">0h 0m</div></div>
+          <button class="btn dark" id="logBtn"><svg class="i"><use href="#i-play"/></svg>Start Day</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="card stat"><div class="ic"><svg class="i"><use href="#i-list"/></svg></div><div><div class="n" id="stToday">0</div><div class="l">Due Today</div></div></div>
+        <div class="card stat"><div class="ic"><svg class="i"><use href="#i-bolt"/></svg></div><div><div class="n" id="stProg">0</div><div class="l">In Progress</div></div></div>
+        <div class="card stat"><div class="ic"><svg class="i"><use href="#i-check"/></svg></div><div><div class="n" id="stDone">0</div><div class="l">Done Today</div></div></div>
+        <div class="card stat"><div class="ic"><svg class="i"><use href="#i-clock"/></svg></div><div><div class="n" id="stFocus">0m</div><div class="l">Focus Time</div></div></div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-col">
+          <div class="card">
+            <h3><svg class="i"><use href="#i-flag"/></svg>Today's Tasks <button class="more" data-go="tasks">View board →</button></h3>
+            <div id="todayList"></div>
+          </div>
+          <div class="card">
+            <h3><svg class="i"><use href="#i-cal"/></svg>Upcoming Content <button class="more" data-go="planner">Open planner →</button></h3>
+            <div id="upcomingList"></div>
+          </div>
+          <div class="card">
+            <h3><svg class="i"><use href="#i-spark"/></svg>AI Tools</h3>
+            <div class="tools">
+              <a class="tool" href="https://chatgpt.com" target="_blank" rel="noopener"><span class="logo" style="background:#10A37F">G</span>ChatGPT</a>
+              <a class="tool" href="https://gemini.google.com" target="_blank" rel="noopener"><span class="logo" style="background:linear-gradient(135deg,#4285F4,#9B72CB,#F4B400)">✦</span>Gemini</a>
+              <a class="tool" href="https://claude.ai" target="_blank" rel="noopener"><span class="logo" style="background:#D97757">✳</span>Claude</a>
+              <a class="tool" href="https://www.perplexity.ai" target="_blank" rel="noopener"><span class="logo" style="background:#1F1F1F">P</span>Perplexity</a>
+              <a class="tool" href="https://www.canva.com" target="_blank" rel="noopener"><span class="logo" style="background:linear-gradient(135deg,#00C4CC,#7D2AE8)">C</span>Canva</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-col">
+          <div class="card">
+            <h3><svg class="i"><use href="#i-chart"/></svg>Today's Progress</h3>
+            <div class="progress-wrap">
+              <div class="ring">
+                <svg viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="50" stroke="var(--yellow-soft)" stroke-width="14" fill="none"/>
+                  <circle id="ringArc" cx="60" cy="60" r="50" stroke="var(--yellow)" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" style="transition:stroke-dashoffset .6s"/>
+                </svg>
+                <div class="pct"><div><span id="ringPct">0%</span><small>complete</small></div></div>
+              </div>
+              <div class="bar-list" id="catBars"></div>
+            </div>
+          </div>
+
+          <div class="card timer">
+            <h3><svg class="i"><use href="#i-clock"/></svg>Focus Timer</h3>
+            <div class="modes" id="timerModes">
+              <button data-min="25" class="active">Focus 25</button>
+              <button data-min="50">Deep 50</button>
+              <button data-min="5">Break 5</button>
+            </div>
+            <div class="clock" id="clock">25:00</div>
+            <div class="ctrl">
+              <button class="btn" id="tStart"><svg class="i"><use href="#i-play"/></svg>Start</button>
+              <button class="btn ghost" id="tReset"><svg class="i"><use href="#i-reset"/></svg>Reset</button>
+            </div>
+            <div class="meta" id="timerMeta">Sessions today: 0</div>
+          </div>
+
+          <div class="card">
+            <h3><svg class="i"><use href="#i-note"/></svg>Quick Note <button class="more" data-go="notes">All notes →</button></h3>
+            <div class="note-new" style="margin:0">
+              <textarea id="quickNote" placeholder="Idea for next reel, client reminder…"></textarea>
+            </div>
+            <div style="text-align:right;margin-top:10px"><button class="btn sm" id="quickNoteSave">Save note</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASKS -->
+    <section class="view" id="view-tasks">
+      <div class="toolbar">
+        <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="taskSearch" placeholder="Search tasks…"></label>
+        <select class="pill" id="taskCat"><option value="">All categories</option></select>
+        <select class="pill" id="taskPri"><option value="">All priorities</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+        <button class="btn ghost sm" id="clearDone" style="margin-left:auto"><svg class="i"><use href="#i-trash"/></svg>Clear done</button>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <!-- PLANNER -->
+    <section class="view" id="view-planner">
+      <div class="toolbar">
+        <button class="icon-btn" id="wkPrev" aria-label="Previous week"><svg class="i"><use href="#i-left"/></svg></button>
+        <button class="btn ghost sm" id="wkToday">This week</button>
+        <button class="icon-btn" id="wkNext" aria-label="Next week"><svg class="i"><use href="#i-right"/></svg></button>
+        <b id="wkLabel" style="font-size:15px"></b>
+        <button class="btn sm" id="addPost" style="margin-left:auto"><svg class="i"><use href="#i-plus"/></svg>Add Content</button>
+      </div>
+      <div class="week" id="week"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <!-- NOTES -->
+    <section class="view" id="view-notes">
+      <div class="note-new">
+        <textarea id="noteText" placeholder="Write a note… (Ctrl + Enter to save)"></textarea>
+        <button class="btn" id="noteSave" style="align-self:flex-end"><svg class="i"><use href="#i-plus"/></svg>Add Note</button>
+      </div>
+      <div class="notes" id="notes"></div>
+    </section>
+
+    <footer class="foot">
+      <span><b style="color:var(--ink)">Bawal Tech Media</b> · Your One Stop Destination for AI Tools &amp; Tech Insights</span>
+      <span>Data is saved in this browser</span>
+    </footer>
+  </main>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="overlay" id="overlay">
+  <form class="modal" id="modal" autocomplete="off"></form>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ============ ICONS ============ -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 3v18M15 3v18"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4M8.5 12h7M8.5 16h5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v4h4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h11l-2 4 2 4H5"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V14M10 20V9M16 20V12M3 9l6-5 5 4 7-5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-insta" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
+  </defs>
+</svg>
+
+<script>
+(() => {
+/* ================= DATA ================= */
+const CATS = ["Content Creation","Video Editing","AI Tool Guides","Tutorials & Tips","Tech Updates","Social Media","Client Work","Admin"];
+const PLATFORMS = {
+  "Instagram Reel":"#E1306C", "Instagram Post":"#F77737", "YouTube Video":"#FF0000",
+  "YouTube Short":"#C4302B", "Story":"#8A3AB9", "Blog / Website":"#3B6FD8"
+};
+const STATUSES = [
+  {id:"todo", name:"To Do", color:"#BDB49A"},
+  {id:"progress", name:"In Progress", color:"#FFD60A"},
+  {id:"done", name:"Done", color:"#111111"}
+];
+const KEY = "bawal-office-v1";
+
+const pad = n => String(n).padStart(2,"0");
+const dkey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today = () => dkey(new Date());
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const parseKey = k => { const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); };
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtTime = ts => { const d = new Date(ts); return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}); };
+const fmtDate = k => parseKey(k).toLocaleDateString([], {day:"numeric", month:"short"});
+
+function seed(){
+  const t = new Date();
+  return {
+    tasks:[
+      {id:uid(), title:"Edit reel: Top 5 AI tools of the week", cat:"Video Editing", priority:"high", due:today(), status:"progress", notes:"Add captions + trending audio", doneAt:null, created:Date.now()},
+      {id:uid(), title:"Write script for Claude tutorial", cat:"Tutorials & Tips", priority:"high", due:today(), status:"todo", notes:"", doneAt:null, created:Date.now()},
+      {id:uid(), title:"Design YouTube thumbnails in Canva", cat:"Content Creation", priority:"medium", due:today(), status:"todo", notes:"", doneAt:null, created:Date.now()},
+      {id:uid(), title:"Reply to brand collaboration emails", cat:"Client Work", priority:"medium", due:dkey(addDays(t,1)), status:"todo", notes:"", doneAt:null, created:Date.now()},
+      {id:uid(), title:"Research new Gemini features", cat:"Tech Updates", priority:"low", due:dkey(addDays(t,2)), status:"todo", notes:"", doneAt:null, created:Date.now()},
+      {id:uid(), title:"Schedule this week's Instagram posts", cat:"Social Media", priority:"medium", due:today(), status:"done", notes:"", doneAt:Date.now(), created:Date.now()}
+    ],
+    posts:[
+      {id:uid(), title:"ChatGPT vs Gemini — which is better?", platform:"Instagram Reel", date:today(), status:"scheduled"},
+      {id:uid(), title:"5 Canva AI hacks", platform:"YouTube Short", date:dkey(addDays(t,1)), status:"idea"},
+      {id:uid(), title:"Perplexity full guide (Hindi)", platform:"YouTube Video", date:dkey(addDays(t,3)), status:"idea"},
+      {id:uid(), title:"Weekly tech news roundup", platform:"Instagram Post", date:dkey(addDays(t,5)), status:"idea"}
+    ],
+    notes:[
+      {id:uid(), text:"Reel idea: \"AI tools that feel illegal to know\" 🔥", color:0, created:Date.now()},
+      {id:uid(), text:"Follow up with editor about new intro template.", color:1, created:Date.now()}
+    ],
+    focus:{}, sessions:{}, log:{}, theme:null
+  };
+}
+
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)) || seed(); } catch(e){ S = seed(); }
+["tasks","posts","notes"].forEach(k => S[k] ||= []);
+["focus","sessions","log"].forEach(k => S[k] ||= {});
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} };
+
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const icon = (id, cls="i") => `<svg class="${cls}"><use href="#i-${id}"/></svg>`;
+let toastTimer;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+/* ================= NAVIGATION ================= */
+const TITLES = {
+  dashboard:["Dashboard", () => new Date().toLocaleDateString([], {weekday:"long", day:"numeric", month:"long", year:"numeric"})],
+  tasks:["Tasks Board", () => "Drag cards between columns to update status"],
+  planner:["Content Planner", () => "Plan reels, videos and posts for the week"],
+  notes:["Notes", () => "Ideas, reminders and quick thoughts"]
+};
+let current = "dashboard";
+function go(v){
+  current = v;
+  $$(".nav button").forEach(b => b.classList.toggle("active", b.dataset.view === v));
+  $$(".view").forEach(s => s.classList.toggle("active", s.id === "view-"+v));
+  $("#pageTitle").textContent = TITLES[v][0];
+  $("#pageSub").textContent = TITLES[v][1]();
+  $("#side").classList.remove("open");
+  render();
+  try { sessionStorage.setItem("bawal-view", v); } catch(e){}
+}
+$("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-view]"); if(b) go(b.dataset.view); });
+document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if(g) go(g.dataset.go); });
+$("#menuBtn").onclick = () => $("#side").classList.toggle("open");
+
+/* ================= THEME ================= */
+function applyTheme(){
+  const root = document.documentElement;
+  if(S.theme) root.dataset.theme = S.theme; else delete root.dataset.theme;
+  const dark = S.theme ? S.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  $("#themeBtn").innerHTML = icon(dark ? "sun" : "moon");
+}
+$("#themeBtn").onclick = () => {
+  const dark = S.theme ? S.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  S.theme = dark ? "light" : "dark"; save(); applyTheme();
+};
+
+/* ================= DASHBOARD ================= */
+function renderDashboard(){
+  const h = new Date().getHours();
+  const part = h < 12 ? "Morning" : h < 17 ? "Afternoon" : "Evening";
+  $("#greet").innerHTML = `Good ${part}, <em>Team!</em>`;
+
+  const tk = today();
+  const due = S.tasks.filter(t => t.due && t.due <= tk && t.status !== "done");
+  const doneToday = S.tasks.filter(t => t.status === "done" && t.doneAt && dkey(new Date(t.doneAt)) === tk);
+  const todayAll = S.tasks.filter(t => t.due === tk || (t.status !== "done" && t.due && t.due < tk) || doneToday.includes(t));
+  const prog = S.tasks.filter(t => t.status === "progress").length;
+
+  $("#heroLine").textContent = due.length
+    ? `You have ${due.length} task${due.length>1?"s":""} lined up for today. Let's get it done!`
+    : "All clear for today — time to create something new!";
+
+  $("#stToday").textContent = due.length;
+  $("#stProg").textContent = prog;
+  $("#stDone").textContent = doneToday.length;
+  const fm = S.focus[tk] || 0;
+  $("#stFocus").textContent = fm >= 60 ? `${Math.floor(fm/60)}h ${fm%60}m` : `${fm}m`;
+
+  // Today list
+  const list = [...todayAll].sort((a,b) => (a.status==="done") - (b.status==="done") || prRank(a) - prRank(b));
+  $("#todayList").innerHTML = list.length ? list.map(t => `
+    <div class="task-row ${t.status==="done"?"done":""}">
+      <button class="check ${t.status==="done"?"on":""}" data-toggle="${t.id}" aria-label="Toggle done">${icon("check")}</button>
+      <span class="tt" title="${esc(t.title)}">${esc(t.title)}</span>
+      ${t.due < tk && t.status!=="done" ? `<span class="chip late">Overdue</span>` : ""}
+      <span class="chip ${t.priority}">${cap(t.priority)}</span>
+    </div>`).join("") : `<div class="empty">No tasks for today. Click <b>Add Task</b> to plan your day.</div>`;
+
+  // Upcoming content
+  const up = S.posts.filter(p => p.date >= tk && p.status !== "published").sort((a,b) => a.date.localeCompare(b.date)).slice(0,4);
+  $("#upcomingList").innerHTML = up.length ? up.map(p => {
+    const d = parseKey(p.date);
+    return `<div class="post-row">
+      <div class="date-badge"><b>${d.getDate()}</b><span>${d.toLocaleDateString([], {month:"short"})}</span></div>
+      <div style="flex:1;min-width:0"><div style="font-weight:600">${esc(p.title)}</div>
+      <div style="font-size:12px;color:var(--muted)"><span style="color:${PLATFORMS[p.platform]||"inherit"}">●</span> ${esc(p.platform)} · ${cap(p.status)}</div></div>
+    </div>`;
+  }).join("") : `<div class="empty">Nothing scheduled. Plan content in the Content Planner.</div>`;
+
+  // Progress ring
+  const total = todayAll.length, done = todayAll.filter(t => t.status==="done").length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  $("#ringPct").textContent = pct + "%";
+  $("#ringArc").style.strokeDashoffset = 314.16 * (1 - pct/100);
+
+  // Category bars (open tasks)
+  const counts = {};
+  S.tasks.filter(t => t.status !== "done").forEach(t => counts[t.cat] = (counts[t.cat]||0) + 1);
+  const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,4);
+  const max = Math.max(1, ...entries.map(e => e[1]));
+  $("#catBars").innerHTML = entries.length ? entries.map(([c,n]) => `
+    <div><div class="lbl"><span>${esc(c)}</span><span>${n}</span></div><div class="bar"><span style="width:${n/max*100}%"></span></div></div>`).join("")
+    : `<div class="empty" style="padding:8px">No open tasks 🎉</div>`;
+
+  renderLog();
+  $("#timerMeta").textContent = `Sessions today: ${S.sessions[tk] || 0}`;
+}
+const prRank = t => ({high:0, medium:1, low:2}[t.priority] ?? 3);
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : "";
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-toggle]"); if(!b) return;
+  const t = S.tasks.find(x => x.id === b.dataset.toggle); if(!t) return;
+  if(t.status === "done"){ t.status = "todo"; t.doneAt = null; }
+  else { t.status = "done"; t.doneAt = Date.now(); toast("Nice work! Task completed ✔"); }
+  save(); render();
+});
+
+/* ---- Day log ---- */
+function renderLog(){
+  const L = S.log[today()] || {};
+  $("#logStart").textContent = L.start ? fmtTime(L.start) : "--:--";
+  $("#logEnd").textContent = L.end ? fmtTime(L.end) : "--:--";
+  const ms = L.start ? ((L.end || Date.now()) - L.start) : 0;
+  const m = Math.floor(ms/60000);
+  $("#logHours").textContent = `${Math.floor(m/60)}h ${m%60}m`;
+  const btn = $("#logBtn");
+  if(!L.start){ btn.innerHTML = icon("play")+"Start Day"; btn.disabled = false; btn.style.opacity = 1; }
+  else if(!L.end){ btn.innerHTML = icon("stop")+"End Day"; btn.disabled = false; btn.style.opacity = 1; }
+  else { btn.innerHTML = icon("check")+"Day Complete"; btn.disabled = true; btn.style.opacity = .6; }
+}
+$("#logBtn").onclick = () => {
+  const k = today(); const L = S.log[k] ||= {};
+  if(!L.start){ L.start = Date.now(); toast("Day started — let's go! 🚀"); }
+  else if(!L.end){ if(!confirm("End your work day now?")) return; L.end = Date.now(); toast("Great job today! 👏"); }
+  save(); renderLog();
+};
+setInterval(() => { if(current === "dashboard") renderLog(); }, 30000);
+
+/* ---- Focus timer ---- */
+let tMin = 25, tLeft = 25*60, tEnd = null, tInt = null;
+function drawClock(){ $("#clock").textContent = `${pad(Math.floor(tLeft/60))}:${pad(tLeft%60)}`; }
+function stopTimer(){ clearInterval(tInt); tInt = null; tEnd = null; $("#tStart").innerHTML = icon("play")+"Start"; }
+$("#timerModes").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  $$("#timerModes button").forEach(x => x.classList.toggle("active", x === b));
+  stopTimer(); tMin = +b.dataset.min; tLeft = tMin*60; drawClock();
+});
+$("#tStart").onclick = () => {
+  if(tInt){ tLeft = Math.max(0, Math.round((tEnd - Date.now())/1000)); stopTimer(); return; }
+  tEnd = Date.now() + tLeft*1000;
+  $("#tStart").innerHTML = icon("pause")+"Pause";
+  tInt = setInterval(() => {
+    tLeft = Math.max(0, Math.round((tEnd - Date.now())/1000)); drawClock();
+    document.title = tLeft ? `${$("#clock").textContent} · Bawal Tech Office` : "Bawal Tech Office";
+    if(tLeft === 0){
+      stopTimer();
+      if(tMin !== 5){
+        const k = today(); S.focus[k] = (S.focus[k]||0) + tMin; S.sessions[k] = (S.sessions[k]||0) + 1; save();
+        toast(`Focus session done! +${tMin} min`);
+      } else toast("Break over — back to work!");
+      try { new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=").play(); } catch(e){}
+      tLeft = tMin*60; drawClock(); render();
+    }
+  }, 500);
+};
+$("#tReset").onclick = () => { stopTimer(); tLeft = tMin*60; drawClock(); document.title = "Bawal Tech Office"; };
+
+/* ---- Quick note ---- */
+$("#quickNoteSave").onclick = () => {
+  const v = $("#quickNote").value.trim(); if(!v) return;
+  S.notes.unshift({id:uid(), text:v, color:S.notes.length % 4, created:Date.now()});
+  $("#quickNote").value = ""; save(); toast("Note saved"); render();
+};
+
+/* ================= TASK BOARD ================= */
+$("#taskCat").innerHTML += CATS.map(c => `<option>${c}</option>`).join("");
+["#taskSearch","#taskCat","#taskPri"].forEach(s => $(s).addEventListener("input", renderBoard));
+
+function renderBoard(){
+  const q = $("#taskSearch").value.toLowerCase().trim(), cat = $("#taskCat").value, pr = $("#taskPri").value;
+  const tk = today();
+  const items = S.tasks.filter(t =>
+    (!q || (t.title + " " + t.notes).toLowerCase().includes(q)) && (!cat || t.cat === cat) && (!pr || t.priority === pr));
+  $("#board").innerHTML = STATUSES.map(st => {
+    const col = items.filter(t => t.status === st.id).sort((a,b) => prRank(a)-prRank(b) || (a.due||"9").localeCompare(b.due||"9"));
+    return `<div class="col" data-status="${st.id}">
+      <div class="col-head"><span class="dot" style="background:${st.color}"></span>${st.name}<span class="n">${col.length}</span></div>
+      ${col.map(t => `
+        <div class="tcard" draggable="true" data-id="${t.id}">
+          <div class="tt">${esc(t.title)}</div>
+          ${t.notes ? `<div class="nt">${esc(t.notes)}</div>` : ""}
+          <div class="meta">
+            <span class="chip ${t.priority}">${cap(t.priority)}</span>
+            <span class="chip">${esc(t.cat)}</span>
+            ${t.due ? `<span class="chip ${t.due < tk && t.status!=="done" ? "late" : "low"}">${icon("cal","i")} ${t.due===tk?"Today":fmtDate(t.due)}</span>` : ""}
+            <span class="acts">
+              ${st.id !== "done" ? `<button class="mini" data-adv="${t.id}" title="Move forward">${icon("right")}</button>` : ""}
+              <button class="mini" data-edit="${t.id}" title="Edit">${icon("edit")}</button>
+              <button class="mini" data-del="${t.id}" title="Delete">${icon("trash")}</button>
+            </span>
+          </div>
+        </div>`).join("") || `<div class="empty">Drop tasks here</div>`}
+    </div>`;
+  }).join("");
+  $$("#board .chip svg").forEach(s => { s.style.width = "11px"; s.style.height = "11px"; s.style.verticalAlign = "-1px"; });
+}
+
+function setStatus(t, s){
+  t.status = s; t.doneAt = s === "done" ? Date.now() : null;
+  if(s === "done") toast("Nice work! Task completed ✔");
+}
+$("#board").addEventListener("click", e => {
+  const adv = e.target.closest("[data-adv]"), ed = e.target.closest("[data-edit]"), del = e.target.closest("[data-del]");
+  if(adv){ const t = S.tasks.find(x => x.id === adv.dataset.adv); setStatus(t, t.status === "todo" ? "progress" : "done"); save(); render(); }
+  if(ed) openTask(S.tasks.find(x => x.id === ed.dataset.edit));
+  if(del && confirm("Delete this task?")){ S.tasks = S.tasks.filter(x => x.id !== del.dataset.del); save(); render(); toast("Task deleted"); }
+});
+let dragId = null;
+$("#board").addEventListener("dragstart", e => { const c = e.target.closest(".tcard"); if(!c) return; dragId = c.dataset.id; c.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
+$("#board").addEventListener("dragend", e => { e.target.closest(".tcard")?.classList.remove("dragging"); $$(".col").forEach(c => c.classList.remove("over")); });
+$("#board").addEventListener("dragover", e => { const c = e.target.closest(".col"); if(!c) return; e.preventDefault(); $$(".col").forEach(x => x.classList.toggle("over", x === c)); });
+$("#board").addEventListener("drop", e => {
+  const c = e.target.closest(".col"); if(!c || !dragId) return; e.preventDefault();
+  const t = S.tasks.find(x => x.id === dragId); if(t && t.status !== c.dataset.status){ setStatus(t, c.dataset.status); save(); }
+  dragId = null; render();
+});
+$("#clearDone").onclick = () => {
+  const n = S.tasks.filter(t => t.status === "done").length; if(!n) return toast("No completed tasks");
+  if(confirm(`Remove ${n} completed task${n>1?"s":""}?`)){ S.tasks = S.tasks.filter(t => t.status !== "done"); save(); render(); }
+};
+
+/* ================= PLANNER ================= */
+let weekOffset = 0;
+const weekStart = () => { const d = new Date(); const day = (d.getDay()+6)%7; d.setHours(0,0,0,0); return addDays(d, -day + weekOffset*7); };
+function renderPlanner(){
+  const start = weekStart(), tk = today();
+  const end = addDays(start, 6);
+  $("#wkLabel").textContent = `${start.toLocaleDateString([], {day:"numeric", month:"short"})} – ${end.toLocaleDateString([], {day:"numeric", month:"short", year:"numeric"})}`;
+  let html = "";
+  for(let i=0;i<7;i++){
+    const d = addDays(start, i), k = dkey(d);
+    const posts = S.posts.filter(p => p.date === k);
+    html += `<div class="day ${k===tk?"today":""}">
+      <div class="day-head"><b>${d.getDate()}</b><span>${d.toLocaleDateString([], {weekday:"short"})}</span>
+        <button class="mini" data-newpost="${k}" title="Add content">${icon("plus")}</button></div>
+      ${posts.map(p => `<div class="post ${p.status==="published"?"published":""}" data-post="${p.id}" style="border-left-color:${PLATFORMS[p.platform]||"#111"}">
+        <span class="pl">${esc(p.platform)}</span><b>${esc(p.title)}</b><span class="st">${cap(p.status)}</span></div>`).join("")}
+    </div>`;
+  }
+  $("#week").innerHTML = html;
+  $("#legend").innerHTML = Object.entries(PLATFORMS).map(([n,c]) => `<span><i style="background:${c}"></i>${n}</span>`).join("");
+}
+$("#wkPrev").onclick = () => { weekOffset--; renderPlanner(); };
+$("#wkNext").onclick = () => { weekOffset++; renderPlanner(); };
+$("#wkToday").onclick = () => { weekOffset = 0; renderPlanner(); };
+$("#addPost").onclick = () => openPost(null, today());
+$("#week").addEventListener("click", e => {
+  const n = e.target.closest("[data-newpost]"), p = e.target.closest("[data-post]");
+  if(n) openPost(null, n.dataset.newpost);
+  else if(p) openPost(S.posts.find(x => x.id === p.dataset.post));
+});
+
+/* ================= NOTES ================= */
+const NOTE_COLORS = ["#FFE45C","#FFF3B0","#FFFFFF","#FFD9A0"];
+function renderNotes(){
+  $("#notes").innerHTML = S.notes.length ? S.notes.map(n => `
+    <div class="note" style="background:${NOTE_COLORS[n.color % NOTE_COLORS.length]};${n.color%4===2?"border:1px solid #EFE6C4":""}">
+      <p>${esc(n.text)}</p>
+      <div class="foot">${new Date(n.created).toLocaleString([], {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"})}
+        <button class="mini" data-delnote="${n.id}" title="Delete">${icon("trash")}</button></div>
+    </div>`).join("") : `<div class="empty">No notes yet. Capture your next big idea above.</div>`;
+}
+function addNote(){
+  const v = $("#noteText").value.trim(); if(!v) return;
+  S.notes.unshift({id:uid(), text:v, color:S.notes.length % 4, created:Date.now()});
+  $("#noteText").value = ""; save(); renderNotes(); toast("Note added");
+}
+$("#noteSave").onclick = addNote;
+$("#noteText").addEventListener("keydown", e => { if(e.key === "Enter" && (e.ctrlKey || e.metaKey)) addNote(); });
+$("#notes").addEventListener("click", e => {
+  const d = e.target.closest("[data-delnote]"); if(!d) return;
+  S.notes = S.notes.filter(n => n.id !== d.dataset.delnote); save(); renderNotes();
+});
+
+/* ================= MODALS ================= */
+const overlay = $("#overlay"), modal = $("#modal");
+const close = () => overlay.classList.remove("open");
+overlay.addEventListener("mousedown", e => { if(e.target === overlay) close(); });
+document.addEventListener("keydown", e => { if(e.key === "Escape") close(); });
+
+function openTask(t){
+  const isNew = !t;
+  t ||= {title:"", cat:CATS[0], priority:"medium", due:today(), status:"todo", notes:""};
+  modal.innerHTML = `
+    <h3>${isNew ? "New Task" : "Edit Task"}</h3>
+    <div class="field"><label>Task title</label><input name="title" required maxlength="140" value="${esc(t.title)}" placeholder="e.g. Edit reel on new AI tool"></div>
+    <div class="row2">
+      <div class="field"><label>Category</label><select name="cat">${CATS.map(c => `<option ${c===t.cat?"selected":""}>${c}</option>`).join("")}</select></div>
+      <div class="field"><label>Priority</label><select name="priority">${["high","medium","low"].map(p => `<option value="${p}" ${p===t.priority?"selected":""}>${cap(p)}</option>`).join("")}</select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Due date</label><input type="date" name="due" value="${esc(t.due||"")}"></div>
+      <div class="field"><label>Status</label><select name="status">${STATUSES.map(s => `<option value="${s.id}" ${s.id===t.status?"selected":""}>${s.name}</option>`).join("")}</select></div>
+    </div>
+    <div class="field"><label>Notes</label><textarea name="notes" rows="3" placeholder="Details, links, checklist…">${esc(t.notes)}</textarea></div>
+    <div class="modal-acts">
+      ${isNew ? "" : `<button type="button" class="btn ghost del" id="mDel">${icon("trash")}Delete</button>`}
+      <button type="button" class="btn ghost" id="mCancel">Cancel</button>
+      <button type="submit" class="btn">${icon("check")}${isNew ? "Add Task" : "Save"}</button>
+    </div>`;
+  modal.onsubmit = e => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(modal));
+    f.title = f.title.trim(); if(!f.title) return;
+    if(isNew){ const n = {id:uid(), created:Date.now(), doneAt:null, ...f}; if(n.status==="done") n.doneAt = Date.now(); S.tasks.push(n); toast("Task added"); }
+    else { const was = t.status; Object.assign(t, f); if(was !== "done" && t.status === "done") t.doneAt = Date.now(); if(t.status !== "done") t.doneAt = null; toast("Task updated"); }
+    save(); close(); render();
+  };
+  $("#mCancel").onclick = close;
+  if(!isNew) $("#mDel").onclick = () => { if(confirm("Delete this task?")){ S.tasks = S.tasks.filter(x => x.id !== t.id); save(); close(); render(); } };
+  overlay.classList.add("open");
+  setTimeout(() => modal.querySelector("input[name=title]").focus(), 50);
+}
+
+function openPost(p, date){
+  const isNew = !p;
+  p ||= {title:"", platform:"Instagram Reel", date, status:"idea"};
+  modal.innerHTML = `
+    <h3>${isNew ? "Plan Content" : "Edit Content"}</h3>
+    <div class="field"><label>Title / Topic</label><input name="title" required maxlength="140" value="${esc(p.title)}" placeholder="e.g. 3 AI tools for students"></div>
+    <div class="row2">
+      <div class="field"><label>Platform</label><select name="platform">${Object.keys(PLATFORMS).map(x => `<option ${x===p.platform?"selected":""}>${x}</option>`).join("")}</select></div>
+      <div class="field"><label>Publish date</label><input type="date" name="date" required value="${esc(p.date)}"></div>
+    </div>
+    <div class="field"><label>Status</label><select name="status">${["idea","scripting","shooting","editing","scheduled","published"].map(s => `<option value="${s}" ${s===p.status?"selected":""}>${cap(s)}</option>`).join("")}</select></div>
+    <div class="modal-acts">
+      ${isNew ? "" : `<button type="button" class="btn ghost del" id="mDel">${icon("trash")}Delete</button>`}
+      <button type="button" class="btn ghost" id="mCancel">Cancel</button>
+      <button type="submit" class="btn">${icon("check")}${isNew ? "Add" : "Save"}</button>
+    </div>`;
+  modal.onsubmit = e => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(modal)); f.title = f.title.trim(); if(!f.title || !f.date) return;
+    if(isNew) S.posts.push({id:uid(), ...f}); else Object.assign(p, f);
+    save(); close(); render(); toast(isNew ? "Content planned" : "Content updated");
+  };
+  $("#mCancel").onclick = close;
+  if(!isNew) $("#mDel").onclick = () => { S.posts = S.posts.filter(x => x.id !== p.id); save(); close(); render(); };
+  overlay.classList.add("open");
+  setTimeout(() => modal.querySelector("input[name=title]").focus(), 50);
+}
+
+["#topAdd","#sideAdd"].forEach(s => $(s).onclick = () => current === "planner" ? openPost(null, today()) : openTask());
+
+/* ================= RENDER ================= */
+function render(){
+  $("#navTaskCount").textContent = S.tasks.filter(t => t.status !== "done").length;
+  $("#topAdd span").textContent = current === "planner" ? "Add Content" : "Add Task";
+  if(current === "dashboard") renderDashboard();
+  if(current === "tasks") renderBoard();
+  if(current === "planner") renderPlanner();
+  if(current === "notes") renderNotes();
+}
+
+applyTheme(); drawClock(); save();
+let startView = "dashboard";
+try { startView = sessionStorage.getItem("bawal-view") || "dashboard"; } catch(e){}
+go(TITLES[startView] ? startView : "dashboard");
+})();
+</script>
+</body>
+</html>
