@@ -440,6 +440,15 @@ footer.foot{margin-top:36px;padding-top:16px;border-top:2px solid var(--yellow);
 <div class="overlay" id="overlay">
   <form class="modal" id="modal" autocomplete="off"></form>
 </div>
+<div class="overlay" id="askOverlay" style="z-index:70">
+  <div class="modal" style="max-width:360px;text-align:center">
+    <h3 id="askMsg" style="margin-bottom:20px">Are you sure?</h3>
+    <div class="modal-acts" style="justify-content:center">
+      <button type="button" class="btn ghost" id="askNo">Cancel</button>
+      <button type="button" class="btn" id="askYes">Yes</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <!-- ============ ICONS ============ -->
@@ -537,6 +546,15 @@ let toastTimer;
 function toast(msg){
   const t = $("#toast"); t.textContent = msg; t.classList.add("show");
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+function ask(msg, yes="Yes"){
+  return new Promise(res => {
+    const o = $("#askOverlay"); $("#askMsg").textContent = msg; $("#askYes").textContent = yes;
+    const done = v => { o.classList.remove("open"); $("#askYes").onclick = $("#askNo").onclick = null; res(v); };
+    $("#askYes").onclick = () => done(true); $("#askNo").onclick = () => done(false);
+    o.classList.add("open"); $("#askYes").focus();
+  });
 }
 
 /* ================= NAVIGATION ================= */
@@ -658,10 +676,10 @@ function renderLog(){
   else if(!L.end){ btn.innerHTML = icon("stop")+"End Day"; btn.disabled = false; btn.style.opacity = 1; }
   else { btn.innerHTML = icon("check")+"Day Complete"; btn.disabled = true; btn.style.opacity = .6; }
 }
-$("#logBtn").onclick = () => {
+$("#logBtn").onclick = async () => {
   const k = today(); const L = S.log[k] ||= {};
   if(!L.start){ L.start = Date.now(); toast("Day started — let's go! 🚀"); }
-  else if(!L.end){ if(!confirm("End your work day now?")) return; L.end = Date.now(); toast("Great job today! 👏"); }
+  else if(!L.end){ if(!(await ask("End your work day now?", "End Day"))) return; L.end = Date.now(); toast("Great job today! 👏"); }
   save(); renderLog();
 };
 setInterval(() => { if(current === "dashboard") renderLog(); }, 30000);
@@ -739,11 +757,11 @@ function setStatus(t, s){
   t.status = s; t.doneAt = s === "done" ? Date.now() : null;
   if(s === "done") toast("Nice work! Task completed ✔");
 }
-$("#board").addEventListener("click", e => {
+$("#board").addEventListener("click", async e => {
   const adv = e.target.closest("[data-adv]"), ed = e.target.closest("[data-edit]"), del = e.target.closest("[data-del]");
   if(adv){ const t = S.tasks.find(x => x.id === adv.dataset.adv); setStatus(t, t.status === "todo" ? "progress" : "done"); save(); render(); }
   if(ed) openTask(S.tasks.find(x => x.id === ed.dataset.edit));
-  if(del && confirm("Delete this task?")){ S.tasks = S.tasks.filter(x => x.id !== del.dataset.del); save(); render(); toast("Task deleted"); }
+  if(del && await ask("Delete this task?", "Delete")){ S.tasks = S.tasks.filter(x => x.id !== del.dataset.del); save(); render(); toast("Task deleted"); }
 });
 let dragId = null;
 $("#board").addEventListener("dragstart", e => { const c = e.target.closest(".tcard"); if(!c) return; dragId = c.dataset.id; c.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
@@ -754,9 +772,9 @@ $("#board").addEventListener("drop", e => {
   const t = S.tasks.find(x => x.id === dragId); if(t && t.status !== c.dataset.status){ setStatus(t, c.dataset.status); save(); }
   dragId = null; render();
 });
-$("#clearDone").onclick = () => {
+$("#clearDone").onclick = async () => {
   const n = S.tasks.filter(t => t.status === "done").length; if(!n) return toast("No completed tasks");
-  if(confirm(`Remove ${n} completed task${n>1?"s":""}?`)){ S.tasks = S.tasks.filter(t => t.status !== "done"); save(); render(); }
+  if(await ask(`Remove ${n} completed task${n>1?"s":""}?`, "Remove")){ S.tasks = S.tasks.filter(t => t.status !== "done"); save(); render(); }
 };
 
 /* ================= PLANNER ================= */
@@ -816,7 +834,7 @@ $("#notes").addEventListener("click", e => {
 const overlay = $("#overlay"), modal = $("#modal");
 const close = () => overlay.classList.remove("open");
 overlay.addEventListener("mousedown", e => { if(e.target === overlay) close(); });
-document.addEventListener("keydown", e => { if(e.key === "Escape") close(); });
+document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("#askOverlay").classList.contains("open")) close(); });
 
 function openTask(t){
   const isNew = !t;
@@ -847,7 +865,7 @@ function openTask(t){
     save(); close(); render();
   };
   $("#mCancel").onclick = close;
-  if(!isNew) $("#mDel").onclick = () => { if(confirm("Delete this task?")){ S.tasks = S.tasks.filter(x => x.id !== t.id); save(); close(); render(); } };
+  if(!isNew) $("#mDel").onclick = async () => { if(await ask("Delete this task?", "Delete")){ S.tasks = S.tasks.filter(x => x.id !== t.id); save(); close(); render(); } };
   overlay.classList.add("open");
   setTimeout(() => modal.querySelector("input[name=title]").focus(), 50);
 }
